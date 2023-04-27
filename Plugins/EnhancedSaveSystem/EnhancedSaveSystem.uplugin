@@ -1,0 +1,26 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1.0",
+	"EngineVersion": "5.0.0",
+	"FriendlyName": "EnhancedSaveSystem",
+	"Description": "",
+	"Category": "Other",
+	"CreatedBy": "devran",
+	"CreatedByURL": "",
+	"DocsURL": "https://docs.google.com/document/d/1uSqJvRJiZE3B6u37jD2nAxBIY9AljfIh533BWuDST3Q/edit?usp=sharing",
+	"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/product/{ID}",
+	"SupportURL": "",
+	"CanContainContent": true,
+	"IsBetaVersion": false,
+	"IsExperimentalVersion": false,
+	"Installed": false,
+	"Modules": [
+		{
+			"Name": "EnhancedSaveSystem",
+			"Type": "Runtime",
+			"LoadingPhase": "Default",
+			"WhitelistPlatforms": [ "Win64" ]
+		}
+	]
+}
