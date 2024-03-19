@@ -28,9 +28,7 @@ Variables that need to be saved and loaded need to be marked as "SaveGame". In b
 
 #### 4. Save and Load
 
-<hr>
-
-Now that actors, objects, and actor components can be detected by ESS, it's time to actually save/load them. Simply call any of the below functions based on your needs, and voila!
+Now that actors, objects, and actor components can be detected by ESS, it's time to actually save/load them. Simply call any of the below functions based on your needs!
 
 Available functions:
 - `SaveActorsInWorld` - Save variables that are marked as "SaveGame" of all world actors and their actor components.
@@ -56,7 +54,7 @@ Overridable  functions:
 
 #### ESSUniqueSavableComponent
 
-Used to have uniquely identifiable actors based on a GUID. These special actors with a GUID will be saved separately from actors which donít have the ìGUIDî property specified.  
+Used to have uniquely identifiable actors based on a GUID. These special actors with a GUID will be saved separately from actors which don‚Äôt have the ‚ÄúGUID‚Äù property specified.  
 The GUID property is only considered/utilized when using the following save/load functions: `SaveActor`, `LoadActor`.
 Special actors are saved in a map to make them easily searchable with the GUID. This has been introduced so that actors can be uniquely identified and to keep them separated from world actors. A use-case for this is if you want to save or load only a specific actor and keep it separated from world actors.
 
