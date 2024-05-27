@@ -1,7 +1,7 @@
 # Enhanced Save System
 
 Enhanced Save System (ESS) is an easy-to-use and blueprints-compatible save system which offers saving and loading.  
-ESS is available in UE versions 5.0 - 5.3 with versions 5.1 - 5.3 still receiving new updates.  
+ESS is available in UE versions 5.0 - 5.4 with versions 5.2 - 5.4 still receiving new updates.  
 ESS can be purchased on the Unreal Engine Marketplace: https://www.unrealengine.com/marketplace/en-US/product/enhanced-save-system
 
 ## Terminology
@@ -56,7 +56,7 @@ Overridable  functions:
 
 #### ESSUniqueSavableComponent
 
-Used to have uniquely identifiable actors based on a GUID. These special actors with a GUID will be saved separately from actors which donít have the ìGUIDî property specified.  
+Used to have uniquely identifiable actors based on a GUID. These special actors with a GUID will be saved separately from actors which don‚Äôt have the ‚ÄúGUID‚Äù property specified.  
 The GUID property is only considered/utilized when using the following save/load functions: `SaveActor`, `LoadActor`.
 Special actors are saved in a map to make them easily searchable with the GUID. This has been introduced so that actors can be uniquely identified and to keep them separated from world actors. A use-case for this is if you want to save or load only a specific actor and keep it separated from world actors.
 
