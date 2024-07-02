@@ -1,7 +1,7 @@
 # Enhanced Save System
 
 Enhanced Save System (ESS) is an easy-to-use and blueprints-compatible save system which offers saving and loading.  
-ESS is available in UE versions 5.0 - 5.3 with versions 5.1 - 5.3 still receiving new updates.  
+ESS is available in UE versions 5.0 - 5.4 with versions 5.2 - 5.4 still receiving new updates.  
 ESS can be purchased on the Unreal Engine Marketplace: https://www.unrealengine.com/marketplace/en-US/product/enhanced-save-system
 
 ## Terminology
