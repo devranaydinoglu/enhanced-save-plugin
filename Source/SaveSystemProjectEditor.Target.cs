@@ -9,7 +9,8 @@ public class SaveSystemProjectEditorTarget : TargetRules
 	{
 		Type = TargetType.Editor;
 		DefaultBuildSettings = BuildSettingsVersion.Latest;
+        IncludeOrderVersion = EngineIncludeOrderVersion.Latest;
 
-		ExtraModuleNames.AddRange( new string[] { "SaveSystemProject" } );
+        ExtraModuleNames.AddRange( new string[] { "SaveSystemProject" } );
 	}
 }
