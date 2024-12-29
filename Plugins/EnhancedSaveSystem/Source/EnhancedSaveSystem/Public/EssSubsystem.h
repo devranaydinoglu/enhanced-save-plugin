@@ -51,7 +51,7 @@ public:
 	bool DeleteSave(const FString& SlotName, const int32 UserIndex);
 
 	/**
-	 * Save an object's variables that are marked as SaveGame.
+	 * Save an object's variables that are marked as SaveGame. Global objects need their `EssGuid` variable to be set.
 	 * This should be used to save objects not in the world (e.g. GameInstance) or special actors (e.g. GameMode, GameState, PlayerState).
 	 * @param Obj Object to save.
 	 * @param SlotName Save game slot to save to.
@@ -62,7 +62,7 @@ public:
 	bool SaveGlobalObject(UObject* Obj, const FString& SlotName, const int32 UserIndex = 0);
 
 	/**
-	 * Load an object's variables that are marked as SaveGame.
+	 * Load an object's variables that are marked as SaveGame. Global objects need their `EssGuid` variable to be set.
 	 * This should be used to load objects not in the world (e.g. GameInstance) or special actors (e.g. GameMode, GameState, PlayerState).
 	 * @param Obj Object to load.
 	 * @param SlotName Save game slot to load from.
