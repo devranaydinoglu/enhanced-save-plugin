@@ -9,7 +9,8 @@ public class SaveSystemProjectTarget : TargetRules
 	{
 		Type = TargetType.Game;
 		DefaultBuildSettings = BuildSettingsVersion.Latest;
+        IncludeOrderVersion = EngineIncludeOrderVersion.Latest;
 
-		ExtraModuleNames.AddRange( new string[] { "SaveSystemProject" } );
+        ExtraModuleNames.AddRange( new string[] { "SaveSystemProject" } );
 	}
 }
