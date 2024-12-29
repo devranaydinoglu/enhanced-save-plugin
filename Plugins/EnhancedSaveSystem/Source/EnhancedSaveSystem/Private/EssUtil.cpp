@@ -1,14 +1,16 @@
 // Copyright 2023 devran. All Rights Reserved.
 
 #include "EssUtil.h"
+#include "GameFramework/GameModeBase.h"
+#include "GameFramework/GameStateBase.h"
+#include "GameFramework/PlayerState.h"
 
-bool EssUtil::IsRuntimeActor(const TObjectPtr<AActor> Actor)
+bool EssUtil::IsRuntimeActor(const AActor* Actor)
 {
-	//return Actor->bNetStartup && !Actor->HasAnyFlags(RF_WasLoaded);
 	return !Actor->HasAnyFlags(RF_WasLoaded);;
 }
 
-FGuid EssUtil::GetGuid(const TObjectPtr<UObject> Obj)
+FGuid EssUtil::GetGuid(const UObject* Obj)
 {
 	FProperty* Prop = GetGuidProperty(Obj);
 	if (Prop)
@@ -20,12 +22,12 @@ FGuid EssUtil::GetGuid(const TObjectPtr<UObject> Obj)
 	return Guid;
 }
 
-FProperty* EssUtil::GetGuidProperty(const TObjectPtr<UObject> Obj)
+FProperty* EssUtil::GetGuidProperty(const UObject* Obj)
 {
 	return Obj->GetClass()->FindPropertyByName("EssGuid");
 }
 
-bool EssUtil::SetGuid(TObjectPtr<UObject> Obj, const FGuid& NewGuid)
+bool EssUtil::SetGuid(UObject* Obj, const FGuid& NewGuid)
 {
 	FProperty* Prop = GetGuidProperty(Obj);
 	if (!Prop)
@@ -38,7 +40,12 @@ bool EssUtil::SetGuid(TObjectPtr<UObject> Obj, const FGuid& NewGuid)
 	return true;
 }
 
-void EssUtil::SetGuid(TObjectPtr<UObject> Obj, const FGuid& NewGuid, FProperty* Prop)
+bool EssUtil::IsActorRespawnable(const AActor* Actor)
+{
+	return !Actor->IsA(AGameModeBase::StaticClass()) && !Actor->IsA(AGameStateBase::StaticClass()) && !Actor->IsA(APlayerState::StaticClass());
+}
+
+void EssUtil::SetGuid(UObject* Obj, const FGuid& NewGuid, FProperty* Prop)
 {
 	FGuid* GuidPtr = Prop->ContainerPtrToValuePtr<FGuid>(Obj);
 	*GuidPtr = NewGuid;
