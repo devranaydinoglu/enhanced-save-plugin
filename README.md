@@ -1,17 +1,58 @@
 # Enhanced Save System
 
-Enhanced Save System (ESS) is an easy-to-use and blueprints-compatible save system which offers saving and loading.  
-ESS is available in UE versions 5.0 - 5.4 with versions 5.2 - 5.4 still receiving new updates.  
-ESS can be purchased on the Unreal Engine Marketplace: https://www.unrealengine.com/marketplace/en-US/product/enhanced-save-system
+Enhanced Save System (ESS) is an easy-to-use and blueprints-compatible save system which offers save and load functionalities.  
+ESS is available for UE versions 5.0 - 5.5 with versions 5.3 - 5.5 still receiving updates.  
+ESS can be purchased on the FAB Marketplace: https://www.fab.com/listings/61a317a4-86d3-4944-983e-6cba1188e733
 
-## Terminology
+- [V2 (New)](#ess-v2)
+- [V1](#ess-v1)
+
+## ESS V2
+
+This is the new, overhauled version of ESS. It applies to Unreal Engine version 5.5.
+
+### Getting Started
+
+#### 1. SaveGame Object
+
+ESS requires you to inherit your SaveGame Object class from EssSaveGame. This is required for storing custom data.
+
+#### 2. Make actors, objects, and actor components detectable by ESS
+
+Implement the EssSavableInterface to actors, objects, and actor components for them to be considered by ESS.
+
+#### 3. Mark variables
+
+Variables that need to be saved and loaded need to be marked as SaveGame. In blueprints, this can be done in the variable's details panel under advanced options. In C++, the specifier `SaveGame` needs to be added to the variable's `UPROPERTY()`.
+
+#### 4. Save and Load
+
+Now that actors, objects, and actor components can be detected by ESS, it's time to actually save/load them. Simply call any of the below functions based on your needs:
+
+- `SaveWorld` - Saves variables that are marked as SaveGame of all actors and components in the world which implement EssSavableInterface. Automatically creates a new save game object if no corresponding one can be found based on the slot name.
+- `LoadWorld` - Loads variables that are marked as SaveGame of all actors and components in the world which implement EssSavableInterface.
+- `DeleteSave` - Deletes all of the corresponding save data and save slot based on the slot name.
+- `SaveGlobalObject` - Save an object's variables that are marked as SaveGame. This should be used to save objects not in the world (e.g. GameInstance) or special actors (e.g. GameMode, GameState, PlayerState).
+- `LoadGlobalObject` - Load an object's variables that are marked as SaveGame. This should be used to load objects not in the world (e.g. GameInstance) or special actors (e.g. GameMode, GameState, PlayerState).
+
+Overridable EssSavableInterface functions:
+- `PreSaveGame` - Called before an actor or object is saved.
+- `PostSaveGame` - Called after an actor or object has been saved.
+- `PostLoadGame` - Called after an actor or object has been loaded.
+
+
+## ESS V1
+
+This is the original version of ESS. It applies to Unreal Engine versions 5.0 - 5.4.
+
+### Terminology
 
 There are two types of actors in ESS:
 
 - Unique actor: an actor with a GUID assigned in its ESSUniqueSavableComponent.
 - World actor: an actor without an ESSUniqueSavableComponent (and therefore without a GUID).
 
-## Getting Started
+### Getting Started
 
 #### 1. SaveGame Object
 
@@ -38,7 +79,7 @@ Available functions:
 - `SaveObject` - Save an object's variables that are marked as "SaveGame". Should only be used to save objects that aren't actors.
 - `LoadObject` - Load an object's variables that are marked as "SaveGame". Should only be used to load objects that aren't actors. **IMPORTANT:** Object needs to be in the world when this function is called.
 
-## Classes
+### Classes
 
 #### ESSBlueprintLibrary
 
