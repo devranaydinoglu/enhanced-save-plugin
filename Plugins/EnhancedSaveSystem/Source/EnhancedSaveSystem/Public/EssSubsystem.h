@@ -23,10 +23,10 @@ public:
 	void Deinitialize() override;
 
 	UFUNCTION(BlueprintCallable, Category = "Enhanced Save System")
-	bool SaveGame(const FString& SlotName, const int32 UserIndex);
+	bool SaveWorld(const FString& SlotName, const int32 UserIndex);
 
 	UFUNCTION(BlueprintCallable, Category = "Enhanced Save System")
-	bool LoadGame(const FString& SlotName, const int32 UserIndex);
+	bool LoadWorld(const FString& SlotName, const int32 UserIndex);
 
 	UFUNCTION(BlueprintCallable, Category = "Enhanced Save System")
 	bool DeleteSave(const FString& SlotName, const int32 UserIndex);
