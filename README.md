@@ -19,7 +19,8 @@ ESS requires you to inherit your SaveGame Object class from EssSaveGame. This is
 
 #### 2. Make actors, objects, and actor components detectable by ESS
 
-Implement the EssSavableInterface to actors, objects, and actor components for them to be considered by ESS.
+Implement the EssSavableInterface to actors, objects, and actor components and add an `EssGuid` variable of type `Guid` for them to be considered by ESS.
+
 
 #### 3. Mark variables
 
