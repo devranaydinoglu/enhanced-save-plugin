@@ -15,11 +15,11 @@ This is the new, overhauled version of ESS. It applies to Unreal Engine version 
 
 #### 1. SaveGame Object
 
-ESS requires you to inherit your SaveGame Object class from EssSaveGame. This is required for storing custom data.
+Inherit your SaveGame object from EssSaveGame. This is required for storing custom data.
 
 #### 2. Make actors, objects, and actor components detectable by ESS
 
-Implement the EssSavableInterface to actors, objects, and actor components and add an `EssGuid` variable of type `Guid` for them to be considered by ESS.
+Implement the EssSavableInterface to actors, objects, and actor components and add an `EssGuid` variable of type `Guid` for them to be considered by ESS. Global objects need their `EssGuid` set. Actors in the world should have an empty `EssGuid`.
 
 #### 3. Mark variables
 
@@ -29,11 +29,11 @@ Variables that need to be saved and loaded need to be marked as SaveGame. In blu
 
 Now that actors, objects, and actor components can be detected by ESS, it's time to actually save/load them. Simply call any of the below functions based on your needs:
 
-- `SaveWorld` - Saves variables that are marked as SaveGame of all actors and components in the world which implement EssSavableInterface. Automatically creates a new save game object if no corresponding one can be found based on the slot name.
+- `SaveWorld` - Saves variables that are marked as SaveGame of all actors and components in the world which implement EssSavableInterface. Special actors which shouldn't be destroyed (e.g. GameMode, PlayerController, GameState, PlayerState) should have their EssGuid set. Automatically creates a new save game object if no corresponding one can be found based on the slot name.
 - `LoadWorld` - Loads variables that are marked as SaveGame of all actors and components in the world which implement EssSavableInterface.
 - `DeleteSave` - Deletes all of the corresponding save data and save slot based on the slot name.
-- `SaveGlobalObject` - Save an object's variables that are marked as SaveGame. This should be used to save objects not in the world (e.g. GameInstance) or special actors (e.g. GameMode, GameState, PlayerState). Global objects need their `EssGuid` variable to be set.
-- `LoadGlobalObject` - Load an object's variables that are marked as SaveGame. This should be used to load objects not in the world (e.g. GameInstance) or special actors (e.g. GameMode, GameState, PlayerState). Global objects need their `EssGuid` variable to be set.
+- `SaveGlobalObject` - Save an object's variables that are marked as SaveGame. This should be used to save objects not in the world (e.g. GameInstance). Global objects need their `EssGuid` variable to be set. Automatically creates a new save game object if no corresponding one can be found based on the slot name.
+- `LoadGlobalObject` - Load an object's variables that are marked as SaveGame. This should be used to load objects not in the world (e.g. GameInstance). Global objects need their `EssGuid` variable to be set.
 
 Overridable EssSavableInterface functions:
 - `PreSaveGame` - Called before an actor or object is saved.
