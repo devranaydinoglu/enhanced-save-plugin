@@ -12,6 +12,8 @@ public:
 	static FProperty* GetGuidProperty(const UObject* Obj);
 	static bool SetGuid(UObject* Obj, const FGuid& NewGuid);
 	static bool IsActorRespawnable(const AActor* Actor);
+	static bool IsActorRespawnable(const TSubclassOf<AActor>& Class);
+	static FString GetLevelName(const ULevel* Level);
 
 private:
 	static void SetGuid(UObject* Obj, const FGuid& NewGuid, FProperty* Prop);

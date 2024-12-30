@@ -42,7 +42,19 @@ bool EssUtil::SetGuid(UObject* Obj, const FGuid& NewGuid)
 
 bool EssUtil::IsActorRespawnable(const AActor* Actor)
 {
-	return !Actor->IsA(AGameModeBase::StaticClass()) && !Actor->IsA(AGameStateBase::StaticClass()) && !Actor->IsA(APlayerState::StaticClass());
+	return !Actor->IsA(AGameModeBase::StaticClass()) && !Actor->IsA(AGameStateBase::StaticClass()) &&
+		!Actor->IsA(APlayerState::StaticClass()) && !Actor->IsA(APlayerController::StaticClass());
+}
+
+bool EssUtil::IsActorRespawnable(const TSubclassOf<AActor>& Class)
+{
+	return !Class->IsChildOf(AGameModeBase::StaticClass()) && !Class->IsChildOf(AGameStateBase::StaticClass()) &&
+		!Class->IsChildOf(APlayerState::StaticClass()) && !Class->IsChildOf(APlayerController::StaticClass());
+}
+ 
+FString EssUtil::GetLevelName(const ULevel* Level)
+{
+	return Level->GetOutermost()->GetName();
 }
 
 void EssUtil::SetGuid(UObject* Obj, const FGuid& NewGuid, FProperty* Prop)
