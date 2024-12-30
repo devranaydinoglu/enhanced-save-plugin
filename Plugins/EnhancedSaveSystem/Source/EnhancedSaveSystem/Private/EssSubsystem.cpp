@@ -108,7 +108,8 @@ bool UEssSubsystem::LoadWorld(const FString& SlotName, const int32 UserIndex)
 		for (auto Level : World->GetLevels())
 		{
 			FEssLevelData* LevelData = WorldData->LevelsData.Find(EssUtil::GetLevelName(Level));
-			RestoreLevelData(Level, LevelData);
+			if (LevelData)
+				RestoreLevelData(Level, LevelData);
 		}
 
 		UE_LOG(LogTemp, Warning, TEXT("World loaded."));
