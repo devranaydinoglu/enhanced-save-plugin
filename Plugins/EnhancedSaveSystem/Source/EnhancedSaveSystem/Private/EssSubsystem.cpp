@@ -1,6 +1,5 @@
 // Copyright 2023 devran. All Rights Reserved.
 
-
 #include "EssSubsystem.h"
 
 #include "EssSavableInterface.h"
@@ -108,7 +107,7 @@ bool UEssSubsystem::LoadWorld(const FString& SlotName, const int32 UserIndex)
 	{
 		for (auto Level : World->GetLevels())
 		{
-			FEssLevelData* LevelData = WorldData->LevelsData.Find(Level->GetOutermost()->GetName());
+			FEssLevelData* LevelData = WorldData->LevelsData.Find(EssUtil::GetLevelName(Level));
 			RestoreLevelData(Level, LevelData);
 		}
 
@@ -250,7 +249,7 @@ FEssLevelData UEssSubsystem::GetLevelData(const TObjectPtr<ULevel> Level)
 	// TODO: Get current data for this level for backup in case save fails
 
 	FEssLevelData LevelData;
-	LevelData.Name = Level->GetOutermost()->GetName();
+	LevelData.Name = EssUtil::GetLevelName(Level);
 
 	for (auto Actor : Level->Actors)
 	{
@@ -267,6 +266,20 @@ FEssLevelData UEssSubsystem::GetLevelData(const TObjectPtr<ULevel> Level)
 				{
 					LevelData.RuntimeActorsData.Add(ActorData);
 					Cast<IEssSavableInterface>(Actor)->Execute_PostSaveGame(Actor);
+				}
+			}
+			else
+			{
+				FGuid Guid = EssUtil::GetGuid(Actor);
+				if (Guid.IsValid())
+				{
+					Cast<IEssSavableInterface>(Actor)->Execute_PreSaveGame(Actor);
+					FEssRuntimeActorData ActorData = ExtractRuntimeActorData(Actor);
+					if (ActorData)
+					{
+						LevelData.RuntimeActorsData.Add(ActorData);
+						Cast<IEssSavableInterface>(Actor)->Execute_PostSaveGame(Actor);
+					}
 				}
 			}
 		}
@@ -303,6 +316,18 @@ void UEssSubsystem::RestoreLevelData(TObjectPtr<ULevel> Level, const FEssLevelDa
 				UE_LOG(LogTemp, Display, TEXT("Runtime actor %s being destroyed."), *Actor->GetFName().ToString());
 				Actor->Destroy();
 			}
+			else
+			{
+				FGuid Guid = EssUtil::GetGuid(Actor);
+				if (Guid.IsValid())
+				{
+					for (const auto& ActorData : LevelData->RuntimeActorsData)
+					{
+						if (Guid == ActorData.Guid)
+							RestoreRuntimeActorData(ActorData, Actor);
+					}
+				}
+			}
 		}
 		else
 		{
@@ -330,7 +355,8 @@ void UEssSubsystem::RestoreLevelData(TObjectPtr<ULevel> Level, const FEssLevelDa
 	// Respawn runtime actors with save data
 	for (auto& ActorData : LevelData->RuntimeActorsData)
 	{
-		RespawnRuntimeActor(ActorData, Level);
+		if (EssUtil::IsActorRespawnable(ActorData.Class))
+			RespawnRuntimeActor(ActorData, Level);
 	}
 
 	// Respawn placed actors with save data
@@ -353,8 +379,6 @@ FEssRuntimeActorData UEssSubsystem::ExtractRuntimeActorData(TObjectPtr<AActor> A
 
 	if (Actor->HasAnyFlags(RF_ClassDefaultObject | RF_ArchetypeObject | RF_BeginDestroyed))
 		return ActorData;
-
-	Cast<IEssSavableInterface>(Actor)->Execute_PreSaveGame(Actor);
 
 	FGuid Guid = EssUtil::GetGuid(Actor);
 	if (!Guid.IsValid())
@@ -431,6 +455,7 @@ FEssGlobalObjectData UEssSubsystem::ExtractGlobalObjectData(TObjectPtr<UObject> 
 
 	ObjectData.Guid = Guid;
 	ObjectData.Class = Obj->GetClass();
+	/*ObjectData.LevelName = EssUtil::GetLevelName(Obj->Level);*/
 
 	// Pass byte array to fill with data
 	FMemoryWriter MemoryWriter(ObjectData.ByteData);
