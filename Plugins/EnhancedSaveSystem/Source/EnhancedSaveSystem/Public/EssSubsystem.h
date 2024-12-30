@@ -24,6 +24,7 @@ public:
 
 	/**
 	 * Saves variables that are marked as SaveGame of all actors and their components in the world which implement ESSSavableInterface.
+	 * Special actors which shouldn't be destroyed (e.g. GameMode, PlayerController, GameState, PlayerState) need their EssGuid set.
 	 * Automatically creates a new save game object if no corresponding one can be found based on the slot name.
 	 * @param SlotName Save game slot to save to.
 	 * @param UserIndex Index used to identify the user doing the saving.
@@ -34,6 +35,7 @@ public:
 
 	/**
 	 * Loads variables that are marked as SaveGame of all actors and their components in the world which implement ESSSavableInterface.
+	 * Special actors which shouldn't be destroyed (e.g. GameMode, PlayerController, GameState, PlayerState) need their EssGuid set.
 	 * @param SlotName Save game slot to load from.
 	 * @param UserIndex Index used to identify the user doing the loading.
 	 * @return Loaded successfully.
@@ -51,8 +53,9 @@ public:
 	bool DeleteSave(const FString& SlotName, const int32 UserIndex);
 
 	/**
-	 * Save an object's variables that are marked as SaveGame. Global objects need their `EssGuid` variable to be set.
-	 * This should be used to save objects not in the world (e.g. GameInstance) or special actors (e.g. GameMode, GameState, PlayerState).
+	 * Save an object's variables that are marked as SaveGame. Global objects need their EssGuid set.
+	 * This should be used to save objects not in the world (e.g. GameInstance).
+	 * Automatically creates a new save game object if no corresponding one can be found based on the slot name.
 	 * @param Obj Object to save.
 	 * @param SlotName Save game slot to save to.
 	 * @param UserIndex Index used to identify the user doing the saving.
@@ -62,8 +65,8 @@ public:
 	bool SaveGlobalObject(UObject* Obj, const FString& SlotName, const int32 UserIndex = 0);
 
 	/**
-	 * Load an object's variables that are marked as SaveGame. Global objects need their `EssGuid` variable to be set.
-	 * This should be used to load objects not in the world (e.g. GameInstance) or special actors (e.g. GameMode, GameState, PlayerState).
+	 * Load an object's variables that are marked as SaveGame. Global objects need their EssGuid set.
+	 * This should be used to load objects not in the world (e.g. GameInstance).
 	 * @param Obj Object to load.
 	 * @param SlotName Save game slot to load from.
 	 * @param UserIndex Index used to identify the user doing the loading.
