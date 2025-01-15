@@ -9,7 +9,7 @@ ESS can be purchased on the FAB Marketplace: https://www.fab.com/listings/61a317
 
 ## ESS V2
 
-This is the new, overhauled version of ESS. It applies to Unreal Engine version 5.5.
+This is the new, overhauled version of ESS. It's available for Unreal Engine 5.5.
 
 ### Getting Started
 
