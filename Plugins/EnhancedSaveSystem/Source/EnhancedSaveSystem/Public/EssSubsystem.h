@@ -12,6 +12,7 @@ struct FEssRuntimeActorData;
 struct FEssLevelData;
 class UEssSaveGame;
 struct FObjectAndNameAsStringProxyArchive;
+class UActorComponent;
 
 UCLASS()
 class ENHANCEDSAVESYSTEM_API UEssSubsystem : public UGameInstanceSubsystem
@@ -80,7 +81,7 @@ protected:
 	void RestoreLevelData(TObjectPtr<ULevel> Level, const FEssLevelData* LevelData);
 	FEssRuntimeActorData ExtractRuntimeActorData(TObjectPtr<AActor> Actor);
 	FEssPlacedActorData ExtractPlacedActorData(TObjectPtr<AActor> Actor);
-	FEssGlobalObjectData ExtractGlobalObjectData(TObjectPtr<UObject> Obj);
+	FEssGlobalObjectData ExtractGlobalObjectData(UObject* Obj);
 	void SerializeComponents(FObjectAndNameAsStringProxyArchive& Archive, TArray <UActorComponent*> Components);
 	void RespawnRuntimeActor(const FEssRuntimeActorData& ActorData, const TObjectPtr<ULevel> Level);
 	void RespawnPlacedActor(const FEssPlacedActorData& ActorData, const TObjectPtr<ULevel> Level);

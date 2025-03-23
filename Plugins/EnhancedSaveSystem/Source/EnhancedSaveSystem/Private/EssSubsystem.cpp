@@ -2,6 +2,8 @@
 
 #include "EssSubsystem.h"
 
+#include "Engine/Level.h"
+#include "Engine/World.h"
 #include "EssSavableInterface.h"
 #include "EssSaveData.h"
 #include "EssSaveGame.h"
@@ -44,7 +46,7 @@ bool UEssSubsystem::SaveWorld(const FString& SlotName, const int32 UserIndex)
 	FEssWorldData WorldData;
 	WorldData.Name = WorldName;
 
-	for (auto Level : World->GetLevels())
+	for (ULevel* Level : World->GetLevels())
 	{
 		FEssLevelData LevelData = GetLevelData(Level);
 		WorldData.LevelsData.Add(LevelData.Name, LevelData);
@@ -105,7 +107,7 @@ bool UEssSubsystem::LoadWorld(const FString& SlotName, const int32 UserIndex)
 
 	if (WorldData)
 	{
-		for (auto Level : World->GetLevels())
+		for (ULevel* Level : World->GetLevels())
 		{
 			FEssLevelData* LevelData = WorldData->LevelsData.Find(EssUtil::GetLevelName(Level));
 			if (LevelData)
@@ -440,7 +442,7 @@ FEssPlacedActorData UEssSubsystem::ExtractPlacedActorData(TObjectPtr<AActor> Act
 	return ActorData;
 }
 
-FEssGlobalObjectData UEssSubsystem::ExtractGlobalObjectData(TObjectPtr<UObject> Obj)
+FEssGlobalObjectData UEssSubsystem::ExtractGlobalObjectData(UObject* Obj)
 {
 	FEssGlobalObjectData ObjectData;
 

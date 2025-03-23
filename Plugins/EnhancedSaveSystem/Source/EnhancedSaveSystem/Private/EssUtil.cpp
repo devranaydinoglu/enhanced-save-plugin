@@ -1,9 +1,12 @@
 // Copyright 2023 devran. All Rights Reserved.
 
 #include "EssUtil.h"
+#include "Engine/Level.h"
+#include "GameFramework/Actor.h"
 #include "GameFramework/GameModeBase.h"
 #include "GameFramework/GameStateBase.h"
 #include "GameFramework/PlayerState.h"
+#include "UObject/Package.h"
 
 bool EssUtil::IsRuntimeActor(const AActor* Actor)
 {
@@ -46,10 +49,10 @@ bool EssUtil::IsActorRespawnable(const AActor* Actor)
 		!Actor->IsA(APlayerState::StaticClass()) && !Actor->IsA(APlayerController::StaticClass());
 }
 
-bool EssUtil::IsActorRespawnable(const TSubclassOf<AActor>& Class)
+bool EssUtil::IsActorRespawnable(const TSubclassOf<AActor>& ActorClass)
 {
-	return !Class->IsChildOf(AGameModeBase::StaticClass()) && !Class->IsChildOf(AGameStateBase::StaticClass()) &&
-		!Class->IsChildOf(APlayerState::StaticClass()) && !Class->IsChildOf(APlayerController::StaticClass());
+	return !ActorClass->IsChildOf(AGameModeBase::StaticClass()) && !ActorClass->IsChildOf(AGameStateBase::StaticClass()) &&
+		!ActorClass->IsChildOf(APlayerState::StaticClass()) && !ActorClass->IsChildOf(APlayerController::StaticClass());
 }
  
 FString EssUtil::GetLevelName(const ULevel* Level)

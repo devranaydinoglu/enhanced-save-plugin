@@ -3,7 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Templates/SubClassOf.h"
+#include "GameFramework/Actor.h"
 #include "EssSaveData.generated.h"
+
+class AActor;
+class UObject;
 
 USTRUCT()
 struct FEssSaveSlotData

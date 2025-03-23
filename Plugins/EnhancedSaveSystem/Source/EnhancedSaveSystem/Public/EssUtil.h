@@ -3,6 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Templates/SubClassOf.h"
+
+class AActor;
+class ULevel;
 
 class ENHANCEDSAVESYSTEM_API EssUtil
 {
