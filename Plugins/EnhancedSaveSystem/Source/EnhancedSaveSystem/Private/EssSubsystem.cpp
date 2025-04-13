@@ -57,7 +57,7 @@ bool UEssSubsystem::SaveWorld(const FString& SlotName, const int32 UserIndex)
 	{
 		FoundSaveData->WorldsData.Add(WorldData.Name, WorldData);
 		FEssSaveSlotData* FoundSaveSlotData = SaveGame->SaveSlotsData.Find(SlotName);
-		FoundSaveSlotData->DateTimeOfSave = FDateTime::Now();
+		FoundSaveSlotData->Timestamp = FDateTime::Now();
 	}
 	else
 	{
@@ -67,7 +67,7 @@ bool UEssSubsystem::SaveWorld(const FString& SlotName, const int32 UserIndex)
 
 		FEssSaveSlotData SaveSlotData;
 		SaveSlotData.SlotName = SlotName;
-		SaveSlotData.DateTimeOfSave = FDateTime::Now();
+		SaveSlotData.Timestamp = FDateTime::Now();
 
 		SaveGame->SaveSlotsData.Add(SlotName, SaveSlotData);
 		SaveGame->SaveData.Add(SlotName, SaveData);
@@ -172,7 +172,7 @@ bool UEssSubsystem::SaveGlobalObject(UObject* Obj, const FString& SlotName, cons
 		FoundSaveData->GlobalObjectData.RemoveSwap(ObjectData);
 		FoundSaveData->GlobalObjectData.Add(ObjectData);
 		FEssSaveSlotData* FoundSaveSlotData = SaveGame->SaveSlotsData.Find(SlotName);
-		FoundSaveSlotData->DateTimeOfSave = FDateTime::Now();
+		FoundSaveSlotData->Timestamp = FDateTime::Now();
 	}
 	else
 	{
@@ -182,7 +182,7 @@ bool UEssSubsystem::SaveGlobalObject(UObject* Obj, const FString& SlotName, cons
 
 		FEssSaveSlotData SaveSlotData;
 		SaveSlotData.SlotName = SlotName;
-		SaveSlotData.DateTimeOfSave = FDateTime::Now();
+		SaveSlotData.Timestamp = FDateTime::Now();
 
 		SaveGame->SaveSlotsData.Add(SlotName, SaveSlotData);
 		SaveGame->SaveData.Add(SlotName, SaveData);
@@ -245,6 +245,34 @@ bool UEssSubsystem::LoadGlobalObject(UObject* Obj, const FString& SlotName, cons
 	}
 
 	return false;
+}
+
+FDateTime UEssSubsystem::GetSaveSlotTimestamp(const FString& SlotName, const int32 UserIndex)
+{
+	if (SlotName.IsEmpty())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Can't get save slot data. SlotName is empty."));
+		return FDateTime(0);
+	}
+
+	if (!UGameplayStatics::DoesSaveGameExist(SlotName, UserIndex))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Can't get save slot data. SaveGame does not exist."));
+		return FDateTime(0);
+	}
+
+	UEssSaveGame* SaveGame = GetSaveGame(SlotName, UserIndex);
+	if (!IsValid(SaveGame))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Can't get save slot data. SaveGame is not valid."));
+		return FDateTime(0);
+	}
+
+	FEssSaveSlotData* SaveSlotData = SaveGame->GetSaveSlotData(SlotName);
+	if (!SaveSlotData)
+		return FDateTime(0);
+
+	return SaveSlotData->Timestamp;
 }
 
 FEssLevelData UEssSubsystem::GetLevelData(const TObjectPtr<ULevel> Level)

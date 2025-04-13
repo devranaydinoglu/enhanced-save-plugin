@@ -13,6 +13,7 @@ struct FEssLevelData;
 class UEssSaveGame;
 struct FObjectAndNameAsStringProxyArchive;
 class UActorComponent;
+struct FEssSaveSlotData;
 
 UCLASS()
 class ENHANCEDSAVESYSTEM_API UEssSubsystem : public UGameInstanceSubsystem
@@ -75,6 +76,9 @@ public:
 	 */
 	UFUNCTION(BlueprintCallable, Category = "Enhanced Save System")
 	bool LoadGlobalObject(UObject* Obj, const FString& SlotName, const int32 UserIndex = 0);
+
+	UFUNCTION(BlueprintCallable, Category = "Enhanced Save System")
+	FDateTime GetSaveSlotTimestamp(const FString& SlotName, const int32 UserIndex);
 
 protected:
 	FEssLevelData GetLevelData(const TObjectPtr<ULevel> Level);
