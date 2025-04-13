@@ -19,7 +19,7 @@ struct FEssSaveSlotData
 	FString SlotName;
 
 	UPROPERTY()
-	FDateTime DateTimeOfSave;
+	FDateTime Timestamp;
 };
 
 USTRUCT()
