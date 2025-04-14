@@ -27,23 +27,26 @@ public:
 	/**
 	 * Saves variables that are marked as SaveGame of all actors and their components in the world which implement ESSSavableInterface.
 	 * Special actors which shouldn't be destroyed (e.g. GameMode, PlayerController, GameState, PlayerState) need their EssGuid set.
-	 * Automatically creates a new save game object if no corresponding one can be found based on the slot name.
+	 * If no SaveGame is provided, it will create or get an existing SaveGame based on the SlotName.
+	 * @param SaveGame (OPTIONAL) Save game object to save to.
 	 * @param SlotName Save game slot to save to.
 	 * @param UserIndex Index used to identify the user doing the saving.
 	 * @return Saved successfully.
 	 */
 	UFUNCTION(BlueprintCallable, Category = "Enhanced Save System")
-	bool SaveWorld(const FString& SlotName, const int32 UserIndex);
+	bool SaveWorld(UEssSaveGame* SaveGame, const FString& SlotName, const int32 UserIndex);
 
 	/**
 	 * Loads variables that are marked as SaveGame of all actors and their components in the world which implement ESSSavableInterface.
 	 * Special actors which shouldn't be destroyed (e.g. GameMode, PlayerController, GameState, PlayerState) need their EssGuid set.
+	 * If no SaveGame is provided, it will try to get an existing SaveGame based on the SlotName.
+	 * @param SaveGame (OPTIONAL) Save game object to save to.
 	 * @param SlotName Save game slot to load from.
 	 * @param UserIndex Index used to identify the user doing the loading.
 	 * @return Loaded successfully.
 	 */
 	UFUNCTION(BlueprintCallable, Category = "Enhanced Save System")
-	bool LoadWorld(const FString& SlotName, const int32 UserIndex);
+	bool LoadWorld(UEssSaveGame* SaveGame, const FString& SlotName, const int32 UserIndex);
 
 	/**
 	 * Deletes all of the corresponding save data and save slot based on the slot name.
@@ -64,7 +67,7 @@ public:
 	 * @return Saved successfully.
 	 */
 	UFUNCTION(BlueprintCallable, Category = "Enhanced Save System")
-	bool SaveGlobalObject(UObject* Obj, const FString& SlotName, const int32 UserIndex = 0);
+	bool SaveGlobalObject(UEssSaveGame* SaveGame, UObject* Obj, const FString& SlotName, const int32 UserIndex = 0);
 
 	/**
 	 * Load an object's variables that are marked as SaveGame. Global objects need their EssGuid set.
@@ -75,7 +78,7 @@ public:
 	 * @return Loaded successfully.
 	 */
 	UFUNCTION(BlueprintCallable, Category = "Enhanced Save System")
-	bool LoadGlobalObject(UObject* Obj, const FString& SlotName, const int32 UserIndex = 0);
+	bool LoadGlobalObject(UEssSaveGame* SaveGame, UObject* Obj, const FString& SlotName, const int32 UserIndex = 0);
 
 	UFUNCTION(BlueprintCallable, Category = "Enhanced Save System")
 	FDateTime GetSaveSlotTimestamp(const FString& SlotName, const int32 UserIndex);

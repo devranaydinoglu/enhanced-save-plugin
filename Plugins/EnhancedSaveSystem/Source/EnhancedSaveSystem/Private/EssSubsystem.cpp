@@ -23,7 +23,7 @@ void UEssSubsystem::Deinitialize()
 	Super::Deinitialize();
 }
 
-bool UEssSubsystem::SaveWorld(const FString& SlotName, const int32 UserIndex)
+bool UEssSubsystem::SaveWorld(UEssSaveGame* SaveGame, const FString& SlotName, const int32 UserIndex)
 {
 	if (SlotName.IsEmpty())
 	{
@@ -31,11 +31,14 @@ bool UEssSubsystem::SaveWorld(const FString& SlotName, const int32 UserIndex)
 		return false;
 	}
 
-	UEssSaveGame* SaveGame = GetSaveGameAndCreateIfNotExists(SlotName, UserIndex);
 	if (!IsValid(SaveGame))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("World not saved. SaveGame is not valid."));
-		return false;
+		SaveGame = GetSaveGameAndCreateIfNotExists(SlotName, UserIndex);
+		if (!IsValid(SaveGame))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("World not saved. SaveGame is not valid."));
+			return false;
+		}
 	}
 
 	UWorld* World = GetWorld();
@@ -85,7 +88,7 @@ bool UEssSubsystem::SaveWorld(const FString& SlotName, const int32 UserIndex)
 	return false;
 }
 
-bool UEssSubsystem::LoadWorld(const FString& SlotName, const int32 UserIndex)
+bool UEssSubsystem::LoadWorld(UEssSaveGame* SaveGame, const FString& SlotName, const int32 UserIndex)
 {
 	if (SlotName.IsEmpty())
 	{
@@ -93,11 +96,14 @@ bool UEssSubsystem::LoadWorld(const FString& SlotName, const int32 UserIndex)
 		return false;
 	}
 
-	UEssSaveGame* SaveGame = GetSaveGame(SlotName, UserIndex);
 	if (!IsValid(SaveGame))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("World not loaded. SaveGame is not valid."));
-		return false;
+		SaveGame = GetSaveGame(SlotName, UserIndex);
+		if (!IsValid(SaveGame))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("World not loaded. SaveGame is not valid."));
+			return false;
+		}
 	}
 
 	UWorld* World = GetWorld();
@@ -132,7 +138,7 @@ bool UEssSubsystem::DeleteSave(const FString& SlotName, const int32 UserIndex)
 	return GetSaveGame(SlotName, UserIndex)->DeleteSave(SlotName);
 }
 
-bool UEssSubsystem::SaveGlobalObject(UObject* Obj, const FString& SlotName, const int32 UserIndex)
+bool UEssSubsystem::SaveGlobalObject(UEssSaveGame* SaveGame, UObject* Obj, const FString& SlotName, const int32 UserIndex)
 {
 	if (SlotName.IsEmpty())
 	{
@@ -143,11 +149,14 @@ bool UEssSubsystem::SaveGlobalObject(UObject* Obj, const FString& SlotName, cons
 	if (!IsValid(Obj) || !Obj->GetClass()->ImplementsInterface(UEssSavableInterface::StaticClass()))
 		return false;
 
-	UEssSaveGame* SaveGame = GetSaveGameAndCreateIfNotExists(SlotName, UserIndex);
 	if (!IsValid(SaveGame))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Global object %s not saved. SaveGame is not valid."), *Obj->GetFName().ToString());
-		return false;
+		SaveGame = GetSaveGameAndCreateIfNotExists(SlotName, UserIndex);
+		if (!IsValid(SaveGame))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Global object %s not saved. SaveGame is not valid."), *Obj->GetFName().ToString());
+			return false;
+		}
 	}
 
 	FGuid Guid = EssUtil::GetGuid(Obj);
@@ -201,7 +210,7 @@ bool UEssSubsystem::SaveGlobalObject(UObject* Obj, const FString& SlotName, cons
 	return false;
 }
 
-bool UEssSubsystem::LoadGlobalObject(UObject* Obj, const FString& SlotName, const int32 UserIndex)
+bool UEssSubsystem::LoadGlobalObject(UEssSaveGame* SaveGame, UObject* Obj, const FString& SlotName, const int32 UserIndex)
 {
 	if (SlotName.IsEmpty())
 	{
@@ -218,11 +227,14 @@ bool UEssSubsystem::LoadGlobalObject(UObject* Obj, const FString& SlotName, cons
 		return false;
 	}
 
-	UEssSaveGame* SaveGame = GetSaveGame(SlotName, UserIndex);
 	if (!IsValid(SaveGame))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Global object %s not loaded. SaveGame is not valid."), *Obj->GetFName().ToString());
-		return false;
+		SaveGame = GetSaveGame(SlotName, UserIndex);
+		if (!IsValid(SaveGame))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Global object %s not loaded. SaveGame is not valid."), *Obj->GetFName().ToString());
+			return false;
+		}
 	}
 
 	FGuid Guid = EssUtil::GetGuid(Obj);
