@@ -97,5 +97,4 @@ protected:
 	void RestoreGlobalObjectData(const FEssGlobalObjectData& ObjectData, TObjectPtr<UObject> Obj);
 	UEssSaveGame* GetSaveGameAndCreateIfNotExists(const FString& SlotName, const int32 UserIndex);
 	UEssSaveGame* GetSaveGame(const FString& SlotName, const int32 UserIndex);
-	void PrintActorProperties(const AActor* Actor);
 };

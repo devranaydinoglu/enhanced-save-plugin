@@ -337,7 +337,6 @@ FEssLevelData UEssSubsystem::GetLevelData(const TObjectPtr<ULevel> Level)
 			{
 				LevelData.PlacedActorsData.Add(ActorData.Name, ActorData);
 				ESS_LOG(Warning, "Placed actor %s data saved.", *Actor->GetActorLabel());
-				PrintActorProperties(Actor);
 				Cast<IEssSavableInterface>(Actor)->Execute_PostSaveGame(Actor);
 			}
 		}
@@ -607,8 +606,6 @@ void UEssSubsystem::RestorePlacedActorData(const FEssPlacedActorData& ActorData,
 	SerializeComponents(Archive, ActorComponents);
 
 	ESS_LOG(Warning, "Placed actor %s data loaded.", *Actor->GetActorLabel());
-
-	PrintActorProperties(Actor);
 }
 
 void UEssSubsystem::RestoreGlobalObjectData(const FEssGlobalObjectData& ObjectData, TObjectPtr<UObject> Obj)
@@ -651,28 +648,4 @@ UEssSaveGame* UEssSubsystem::GetSaveGame(const FString& SlotName, const int32 Us
 
 	UEssSaveGame* SaveGame = Cast<UEssSaveGame>(UGameplayStatics::LoadGameFromSlot(SlotName, UserIndex));
 	return SaveGame;
-}
-
-void UEssSubsystem::PrintActorProperties(const AActor* Actor)
-{
-	if (!IsValid(Actor))
-		return;
-
-	UClass* ActorClass = Actor->GetClass();
-	FString PropertyLog;
-	
-	for (TFieldIterator<FProperty> PropIt(ActorClass); PropIt; ++PropIt)
-	{
-		FProperty* Property = *PropIt;
-
-		PropertyLog = *Property->GetName();
-		PropertyLog.Append(": ");
-
-		if (FBoolProperty* BoolProp = CastField<FBoolProperty>(Property))
-		{
-			bool Value = BoolProp->GetPropertyValue_InContainer(Actor);
-			PropertyLog.Append(Value ? "true" : "false");
-			ESS_LOG(Display, "%s", *PropertyLog);
-		}
-	}
 }
