@@ -336,7 +336,7 @@ FEssLevelData UEssSubsystem::GetLevelData(const TObjectPtr<ULevel> Level)
 			if (ActorData)
 			{
 				LevelData.PlacedActorsData.Add(ActorData.Name, ActorData);
-				ESS_LOG(Warning, "Placed actor %s data saved.", *Actor->GetActorLabel());
+				ESS_LOG(Warning, "Placed actor %s data saved.", *Actor->GetActorNameOrLabel());
 				Cast<IEssSavableInterface>(Actor)->Execute_PostSaveGame(Actor);
 			}
 		}
@@ -422,7 +422,7 @@ void UEssSubsystem::RestoreLevelData(TObjectPtr<ULevel> Level, const FEssLevelDa
 	for (auto PlacedActor : PlacedActorsToBeDestroyed)
 	{
 		if (PlacedActor->Destroy())
-			ESS_LOG(Warning, "Placed actor %s was destroyed.", *PlacedActor->GetActorLabel());
+			ESS_LOG(Warning, "Placed actor %s was destroyed.", *PlacedActor->GetActorNameOrLabel());
 	}
 }
 
@@ -605,7 +605,7 @@ void UEssSubsystem::RestorePlacedActorData(const FEssPlacedActorData& ActorData,
 	TArray<UActorComponent*> ActorComponents = Actor->GetComponentsByInterface(UEssSavableInterface::StaticClass());
 	SerializeComponents(Archive, ActorComponents);
 
-	ESS_LOG(Warning, "Placed actor %s data loaded.", *Actor->GetActorLabel());
+	ESS_LOG(Warning, "Placed actor %s data loaded.", *Actor->GetActorNameOrLabel());
 }
 
 void UEssSubsystem::RestoreGlobalObjectData(const FEssGlobalObjectData& ObjectData, TObjectPtr<UObject> Obj)
