@@ -12,6 +12,7 @@
 #include "Serialization/ObjectAndNameAsStringProxyArchive.h"
 #include "Serialization/MemoryWriter.h"
 #include "Serialization/MemoryReader.h"
+#include "EssLog.h"
 
 void UEssSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
@@ -27,7 +28,7 @@ bool UEssSubsystem::SaveWorld(UEssSaveGame* SaveGame, const FString& SlotName, c
 {
 	if (SlotName.IsEmpty())
 	{
-		UE_LOG(LogTemp, Warning, TEXT("World not saved. SlotName is empty."));
+		ESS_LOG(Warning, "World not saved. SlotName is empty.");
 		return false;
 	}
 
@@ -36,7 +37,7 @@ bool UEssSubsystem::SaveWorld(UEssSaveGame* SaveGame, const FString& SlotName, c
 		SaveGame = GetSaveGameAndCreateIfNotExists(SlotName, UserIndex);
 		if (!IsValid(SaveGame))
 		{
-			UE_LOG(LogTemp, Warning, TEXT("World not saved. SaveGame is not valid."));
+			ESS_LOG(Warning, "World not saved. SaveGame is not valid.");
 			return false;
 		}
 	}
@@ -80,11 +81,11 @@ bool UEssSubsystem::SaveWorld(UEssSaveGame* SaveGame, const FString& SlotName, c
 
 	if (bSaved)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("World saved."));
+		ESS_LOG(Warning, "World saved.");
 		return true;
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("World not saved."));
+	ESS_LOG(Warning, "World not saved.");
 	return false;
 }
 
@@ -92,7 +93,7 @@ bool UEssSubsystem::LoadWorld(UEssSaveGame* SaveGame, const FString& SlotName, c
 {
 	if (SlotName.IsEmpty())
 	{
-		UE_LOG(LogTemp, Warning, TEXT("World not loaded. SlotName is empty."));
+		ESS_LOG(Warning, "World not loaded. SlotName is empty.");
 		return false;
 	}
 
@@ -101,7 +102,7 @@ bool UEssSubsystem::LoadWorld(UEssSaveGame* SaveGame, const FString& SlotName, c
 		SaveGame = GetSaveGame(SlotName, UserIndex);
 		if (!IsValid(SaveGame))
 		{
-			UE_LOG(LogTemp, Warning, TEXT("World not loaded. SaveGame is not valid."));
+			ESS_LOG(Warning, "World not loaded. SaveGame is not valid.");
 			return false;
 		}
 	}
@@ -120,7 +121,7 @@ bool UEssSubsystem::LoadWorld(UEssSaveGame* SaveGame, const FString& SlotName, c
 				RestoreLevelData(Level, LevelData);
 		}
 
-		UE_LOG(LogTemp, Warning, TEXT("World loaded."));
+		ESS_LOG(Warning, "World loaded.");
 		return true;
 	}
 
@@ -131,7 +132,7 @@ bool UEssSubsystem::DeleteSave(const FString& SlotName, const int32 UserIndex)
 {
 	if (SlotName.IsEmpty())
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Save not deleted. SlotName is empty."));
+		ESS_LOG(Warning, "Save not deleted. SlotName is empty.");
 		return false;
 	}
 
@@ -142,7 +143,7 @@ bool UEssSubsystem::SaveGlobalObject(UEssSaveGame* SaveGame, UObject* Obj, const
 {
 	if (SlotName.IsEmpty())
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Global object %s not saved. SlotName is empty."), *Obj->GetFName().ToString());
+		ESS_LOG(Warning, "Global object %s not saved. SlotName is empty.", *Obj->GetFName().ToString());
 		return false;
 	}
 
@@ -154,7 +155,7 @@ bool UEssSubsystem::SaveGlobalObject(UEssSaveGame* SaveGame, UObject* Obj, const
 		SaveGame = GetSaveGameAndCreateIfNotExists(SlotName, UserIndex);
 		if (!IsValid(SaveGame))
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Global object %s not saved. SaveGame is not valid."), *Obj->GetFName().ToString());
+			ESS_LOG(Warning, "Global object %s not saved. SaveGame is not valid.", *Obj->GetFName().ToString());
 			return false;
 		}
 	}
@@ -162,14 +163,14 @@ bool UEssSubsystem::SaveGlobalObject(UEssSaveGame* SaveGame, UObject* Obj, const
 	FGuid Guid = EssUtil::GetGuid(Obj);
 	if (!Guid.IsValid())
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Global object %s not saved. Object doesn't have a valid GUID set."), *Obj->GetFName().ToString());
+		ESS_LOG(Warning, "Global object %s not saved. Object doesn't have a valid GUID set.", *Obj->GetFName().ToString());
 		return false;
 	}
 
 	FEssGlobalObjectData ObjectData = ExtractGlobalObjectData(Obj);
 	if (!ObjectData)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Global object %s not saved. Save data couldn't be extracted."), *Obj->GetFName().ToString());
+		ESS_LOG(Warning, "Global object %s not saved. Save data couldn't be extracted.", *Obj->GetFName().ToString());
 		return false;
 	}
 
@@ -201,12 +202,12 @@ bool UEssSubsystem::SaveGlobalObject(UEssSaveGame* SaveGame, UObject* Obj, const
 
 	if (bSaved)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Global object %s saved."), *Obj->GetFName().ToString());
+		ESS_LOG(Warning, "Global object %s saved.", *Obj->GetFName().ToString());
 		Cast<IEssSavableInterface>(Obj)->Execute_PostSaveGame(Obj);
 		return true;
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("Global object %s not saved."), *Obj->GetFName().ToString());
+	ESS_LOG(Warning, "Global object %s not saved.", *Obj->GetFName().ToString());
 	return false;
 }
 
@@ -214,7 +215,7 @@ bool UEssSubsystem::LoadGlobalObject(UEssSaveGame* SaveGame, UObject* Obj, const
 {
 	if (SlotName.IsEmpty())
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Global object %s not loaded. SlotName is empty."), *Obj->GetFName().ToString());
+		ESS_LOG(Warning, "Global object %s not loaded. SlotName is empty.", *Obj->GetFName().ToString());
 		return false;
 	}
 
@@ -223,7 +224,7 @@ bool UEssSubsystem::LoadGlobalObject(UEssSaveGame* SaveGame, UObject* Obj, const
 
 	if (!UGameplayStatics::DoesSaveGameExist(SlotName, UserIndex))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Global object %s not loaded. SaveGame does not exist."), *Obj->GetFName().ToString());
+		ESS_LOG(Warning, "Global object %s not loaded. SaveGame does not exist.", *Obj->GetFName().ToString());
 		return false;
 	}
 
@@ -232,7 +233,7 @@ bool UEssSubsystem::LoadGlobalObject(UEssSaveGame* SaveGame, UObject* Obj, const
 		SaveGame = GetSaveGame(SlotName, UserIndex);
 		if (!IsValid(SaveGame))
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Global object %s not loaded. SaveGame is not valid."), *Obj->GetFName().ToString());
+			ESS_LOG(Warning, "Global object %s not loaded. SaveGame is not valid.", *Obj->GetFName().ToString());
 			return false;
 		}
 	}
@@ -240,7 +241,7 @@ bool UEssSubsystem::LoadGlobalObject(UEssSaveGame* SaveGame, UObject* Obj, const
 	FGuid Guid = EssUtil::GetGuid(Obj);
 	if (!Guid.IsValid())
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Global object %s not loaded. Object doesn't have a valid GUID set."), *Obj->GetFName().ToString());
+		ESS_LOG(Warning, "Global object %s not loaded. Object doesn't have a valid GUID set.", *Obj->GetFName().ToString());
 		return false;
 	}
 
@@ -263,20 +264,20 @@ FDateTime UEssSubsystem::GetSaveSlotTimestamp(const FString& SlotName, const int
 {
 	if (SlotName.IsEmpty())
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Can't get save slot data. SlotName is empty."));
+		ESS_LOG(Warning, "Can't get save slot data. SlotName is empty.");
 		return FDateTime(0);
 	}
 
 	if (!UGameplayStatics::DoesSaveGameExist(SlotName, UserIndex))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Can't get save slot data. SaveGame does not exist."));
+		ESS_LOG(Warning, "Can't get save slot data. SaveGame does not exist.");
 		return FDateTime(0);
 	}
 
 	UEssSaveGame* SaveGame = GetSaveGame(SlotName, UserIndex);
 	if (!IsValid(SaveGame))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Can't get save slot data. SaveGame is not valid."));
+		ESS_LOG(Warning, "Can't get save slot data. SaveGame is not valid.");
 		return FDateTime(0);
 	}
 
@@ -308,6 +309,7 @@ FEssLevelData UEssSubsystem::GetLevelData(const TObjectPtr<ULevel> Level)
 				if (ActorData)
 				{
 					LevelData.RuntimeActorsData.Add(ActorData);
+					ESS_LOG(Warning, "Runtime actor %s data saved.", *Actor->GetFName().ToString());
 					Cast<IEssSavableInterface>(Actor)->Execute_PostSaveGame(Actor);
 				}
 			}
@@ -321,6 +323,7 @@ FEssLevelData UEssSubsystem::GetLevelData(const TObjectPtr<ULevel> Level)
 					if (ActorData)
 					{
 						LevelData.RuntimeActorsData.Add(ActorData);
+						ESS_LOG(Warning, "Runtime actor %s data saved.", *Actor->GetFName().ToString());
 						Cast<IEssSavableInterface>(Actor)->Execute_PostSaveGame(Actor);
 					}
 				}
@@ -333,6 +336,7 @@ FEssLevelData UEssSubsystem::GetLevelData(const TObjectPtr<ULevel> Level)
 			if (ActorData)
 			{
 				LevelData.PlacedActorsData.Add(ActorData.Name, ActorData);
+				ESS_LOG(Warning, "Placed actor %s data saved.", *Actor->GetActorNameOrLabel());
 				Cast<IEssSavableInterface>(Actor)->Execute_PostSaveGame(Actor);
 			}
 		}
@@ -343,8 +347,8 @@ FEssLevelData UEssSubsystem::GetLevelData(const TObjectPtr<ULevel> Level)
 
 void UEssSubsystem::RestoreLevelData(TObjectPtr<ULevel> Level, const FEssLevelData* LevelData)
 {
-	TArray<FEssPlacedActorData> TempPlacedActorsData;
-	LevelData->PlacedActorsData.GenerateValueArray(TempPlacedActorsData);
+	TArray<FEssPlacedActorData> RespawnablePlacedActorsData;
+	LevelData->PlacedActorsData.GenerateValueArray(RespawnablePlacedActorsData);
 	TArray<AActor*> PlacedActorsToBeDestroyed;
 
 	for (auto Actor : Level->Actors)
@@ -356,8 +360,8 @@ void UEssSubsystem::RestoreLevelData(TObjectPtr<ULevel> Level, const FEssLevelDa
 		{
 			if (EssUtil::IsActorRespawnable(Actor))
 			{
-				UE_LOG(LogTemp, Display, TEXT("Runtime actor %s being destroyed."), *Actor->GetFName().ToString());
-				Actor->Destroy();
+				if (Actor->Destroy())
+					ESS_LOG(Warning, "Runtime actor %s was destroyed.", *Actor->GetFName().ToString());
 			}
 			else
 			{
@@ -374,22 +378,28 @@ void UEssSubsystem::RestoreLevelData(TObjectPtr<ULevel> Level, const FEssLevelDa
 		}
 		else
 		{
-			for (int32 i = TempPlacedActorsData.Num() - 1; i >= 0; --i)
+			// RespawnablePlacedActorsData is used to respawn placed actors with save data. If the game is
+			// loaded during play (e.g. player dies), the placed actors that had been destroyed need to be
+			// respawned. So we ignore placed actors that are still in the world and don't need to be respawned.
+			for (int32 i = RespawnablePlacedActorsData.Num() - 1; i >= 0; --i)
 			{
-				if (TempPlacedActorsData[i].Name == Actor->GetFName())
+				if (RespawnablePlacedActorsData[i].Name == Actor->GetFName())
 				{
-					TempPlacedActorsData.RemoveAt(i);
+					RespawnablePlacedActorsData.RemoveAt(i);
 				}
 			}
 
+			// Placed actors that got destroyed before a save will be in the world when a level is reloaded but
+			// won't have save data since they got destroyed before the save. These need to be restroyed when
+			// a level is reloaded.
 			const FEssPlacedActorData* PlacedActorSaveData = LevelData->PlacedActorsData.Find(Actor->GetFName());
 			if (!PlacedActorSaveData)
-				PlacedActorsToBeDestroyed.Add(Actor);
-
-			const FEssPlacedActorData* ActorData = LevelData->PlacedActorsData.Find(Actor->GetFName());
-			if (ActorData)
 			{
-				RestorePlacedActorData(*ActorData, Actor);
+				PlacedActorsToBeDestroyed.Add(Actor);
+			}
+			else
+			{
+				RestorePlacedActorData(*PlacedActorSaveData, Actor);
 				Cast<IEssSavableInterface>(Actor)->Execute_PostLoadGame(Actor);
 			}
 		}
@@ -403,7 +413,7 @@ void UEssSubsystem::RestoreLevelData(TObjectPtr<ULevel> Level, const FEssLevelDa
 	}
 
 	// Respawn placed actors with save data
-	for (auto& ActorData : TempPlacedActorsData)
+	for (auto& ActorData : RespawnablePlacedActorsData)
 	{
 		RespawnPlacedActor(ActorData, Level);
 	}
@@ -411,8 +421,8 @@ void UEssSubsystem::RestoreLevelData(TObjectPtr<ULevel> Level, const FEssLevelDa
 	// Redestroy placed actors with no save data
 	for (auto PlacedActor : PlacedActorsToBeDestroyed)
 	{
-		UE_LOG(LogTemp, Display, TEXT("Placed actor %s being destroyed."), *PlacedActor->GetFName().ToString());
-		PlacedActor->Destroy();
+		if (PlacedActor->Destroy())
+			ESS_LOG(Warning, "Placed actor %s was destroyed.", *PlacedActor->GetActorNameOrLabel());
 	}
 }
 
@@ -492,7 +502,7 @@ FEssGlobalObjectData UEssSubsystem::ExtractGlobalObjectData(UObject* Obj)
 	FGuid Guid = EssUtil::GetGuid(Obj);
 	if (!Guid.IsValid())
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Global object %s has no EssGuid value set and can therefore not be saved."), *Obj->GetFName().ToString());
+		ESS_LOG(Warning, "Global object %s has no EssGuid value set and can therefore not be saved.", *Obj->GetFName().ToString());
 		return ObjectData;
 	}
 
@@ -572,6 +582,8 @@ void UEssSubsystem::RestoreRuntimeActorData(const FEssRuntimeActorData& ActorDat
 	// Convert actor components' binary data back to variables
 	TArray<UActorComponent*> ActorComponents = Actor->GetComponentsByInterface(UEssSavableInterface::StaticClass());
 	SerializeComponents(Archive, ActorComponents);
+
+	ESS_LOG(Warning, "Runtime actor %s data loaded.", *Actor->GetFName().ToString());
 }
 
 void UEssSubsystem::RestorePlacedActorData(const FEssPlacedActorData& ActorData, TObjectPtr<AActor> Actor)
@@ -585,13 +597,15 @@ void UEssSubsystem::RestorePlacedActorData(const FEssPlacedActorData& ActorData,
 	FObjectAndNameAsStringProxyArchive Archive(MemoryReader, true);
 	Archive.ArIsSaveGame = true;
 	Archive.ArNoDelta = true;
-
+	
 	// Convert actor binary data back to variables
 	Actor->Serialize(Archive);
 
 	// Convert actor components' binary data back to variables
 	TArray<UActorComponent*> ActorComponents = Actor->GetComponentsByInterface(UEssSavableInterface::StaticClass());
 	SerializeComponents(Archive, ActorComponents);
+
+	ESS_LOG(Warning, "Placed actor %s data loaded.", *Actor->GetActorNameOrLabel());
 }
 
 void UEssSubsystem::RestoreGlobalObjectData(const FEssGlobalObjectData& ObjectData, TObjectPtr<UObject> Obj)
@@ -606,13 +620,15 @@ void UEssSubsystem::RestoreGlobalObjectData(const FEssGlobalObjectData& ObjectDa
 
 	// Convert obj binary data back to variables
 	Obj->Serialize(Archive);
+
+	ESS_LOG(Warning, "Global object %s data loaded.", *Obj->GetFName().ToString());
 }
 
 UEssSaveGame* UEssSubsystem::GetSaveGameAndCreateIfNotExists(const FString& SlotName, const int32 UserIndex)
 {
 	if (!UGameplayStatics::DoesSaveGameExist(SlotName, UserIndex))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("SaveGame does not exist. Creating new save game object."));
+		ESS_LOG(Warning, "SaveGame does not exist. Creating new save game object.");
 
 		UEssSaveGame* SaveGame = Cast<UEssSaveGame>(UGameplayStatics::CreateSaveGameObject(UEssSaveGame::StaticClass()));
 		return SaveGame;
@@ -626,7 +642,7 @@ UEssSaveGame* UEssSubsystem::GetSaveGame(const FString& SlotName, const int32 Us
 {
 	if (!UGameplayStatics::DoesSaveGameExist(SlotName, UserIndex))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("SaveGame does not exist. Creating new save game object."));
+		ESS_LOG(Warning, "SaveGame does not exist");
 		return nullptr;
 	}
 
